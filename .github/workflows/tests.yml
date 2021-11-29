@@ -1,4 +1,4 @@
-  name: Testing
+  name: Running tests on push...
   on: [push]
   jobs:
     Execute-Tests:
