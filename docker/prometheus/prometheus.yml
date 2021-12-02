@@ -1,0 +1,34 @@
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
+scrape_configs:
+  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+  - job_name: 'prometheus'
+
+    scrape_interval: 15s
+
+    # metrics_path defaults to '/metrics'
+    # scheme defaults to 'http'.
+
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # Create a job for Docker Swarm containers.
+  - job_name: 'dockerswarm'
+
+    scrape_interval: 15s
+
+    dockerswarm_sd_configs:
+      - host: unix:///var/run/docker.sock
+        role: tasks
+    relabel_configs:
+      # Only keep containers that should be running.
+      - source_labels: [__meta_dockerswarm_task_desired_state]
+        regex: running
+        action: keep
+      # Only keep containers that have a `prometheus-job` label.
+      - source_labels: [__meta_dockerswarm_service_label_prometheus_job]
+        regex: .+
+        action: keep
+      # Use the prometheus-job Swarm label as Prometheus job label.
+      - source_labels: [__meta_dockerswarm_service_label_prometheus_job]
+        target_label: job

@@ -11,5 +11,49 @@ services:
       update_config:
         delay: 10s
 
-  redis:
-    image: redis:alpine
+  prometheus:
+    image: prom/prometheus
+    # https://github.com/prometheus/prometheus/issues/8185
+    user: root
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    deploy:
+      replicas: 1
+
+  node_exporter:
+    image: prom/node-exporter
+    command:
+      - '--path.rootfs=/host'
+    ports:
+      - "9100:9100"
+    volumes:
+      - '/:/host:ro,rslave'
+    deploy:
+      mode: global
+      labels:
+        prometheus-job: node-exporter
+
+  grafana:
+    image: grafana/grafana:6.5.0
+    ports:
+      - "3000:3000"
+    deploy:
+      replicas: 1
+
+  cadvisor:
+    image: google/cadvisor
+    ports:
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /:/rootfs:ro
+      - /var/run:/var/run
+      - /sys:/sys:ro
+      - /var/lib/docker:/var/lib/docker:ro
+    deploy:
+      mode: global
+      labels:
+        prometheus-job: cadvisor
