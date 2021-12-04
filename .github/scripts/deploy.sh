@@ -12,6 +12,8 @@ cd ../..
 
 # Ansible configuration
 
+cat terraform/ansible/hosts.ini
+
 mkdir ~/.ssh
 
 echo $VAULT_PASS > ~/vault_passowrd_file.txt
