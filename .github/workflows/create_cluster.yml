@@ -1,0 +1,23 @@
+name: Create the cluster
+on:
+  workflow_dispatch:
+    inputs:
+      number_nodes:
+        default: 2
+        required: true
+        description: "Number of nodes of the cluster"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+
+      - name: Create the cluster
+        run: .github/scripts/create_cluster.sh
+        env:
+          VAULT_PASS: ${{ secrets.VAULT_PASS }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          NUMBER_OF_NODES: ${{ github.event.inputs.number_nodes }}

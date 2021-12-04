@@ -1,0 +1,16 @@
+name: Destroy the cluster
+on:
+  workflow_dispatch:
+jobs:
+  deploy:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+
+      - name: Destroy the cluster
+        run: .github/scripts/destroy_cluster.sh
+        env:
+          VAULT_PASS: ${{ secrets.VAULT_PASS }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
