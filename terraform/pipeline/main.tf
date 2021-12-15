@@ -6,7 +6,7 @@ data "terraform_remote_state" "cluster" {
   backend = "s3"
 
   config = {
-    bucket = "devops-urjc-state"
+    bucket = "devops-garin98-state"
     key     = "terraform/devops-swarm-state/terraform.tfstate"
     region = "eu-west-1"
   }
