@@ -219,3 +219,15 @@ Como siempre, se debe eliminar el cluster y destruir las instancias. Para
 ello, activamos la acción de destroy y finalizamos con todo.
 
 ### Visualización de métricas con grafana (BONUS - medium)
+
+Para acceder usuario y contraseña: admin.
+Pide una nueva contraseña que no importa.
+
+En add data source vamos a vincular prometheus (http://direcciónIP:9090) para poder utilizar sus 
+métricas. Y a continuación, crear un dashboard con las gráficas deseadas.
+
+    - container_cpu_usage_seconds_total
+    - rate(node_cpu_seconds_total[5m])
+    - node_disk_info
+    - node_network_info
+
